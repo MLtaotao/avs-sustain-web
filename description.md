@@ -35,3 +35,9 @@ python -m django --version
 python manage.py runserver
 ```
 
+### start app 
+```
+python manage.py startapp avsapp
+```
+
+
