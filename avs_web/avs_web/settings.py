@@ -25,7 +25,7 @@ SECRET_KEY = '_-x7@$&$7#t4)zpfn1et#vccmxp0py@zph8_@9ftigafxpwirj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'mysite.com', 'localhost']
 
 
 # Application definition
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'phonenumber_field',
+    'location_field.apps.DefaultConfig',
     'avsapp',
 ]
 
