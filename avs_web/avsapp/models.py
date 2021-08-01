@@ -22,5 +22,5 @@ class Consultant(models.Model):
     city = models.CharField(max_length=255, blank=True)
     location = PlainLocationField(based_fields=['city'], zoom=7, blank=True)
     vetted = models.BooleanField(default= False)
-    rating = models.DecimalField(max_digits=3, decimal_places=2, blank=True)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=5.00)
 

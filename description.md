@@ -40,4 +40,37 @@ python manage.py runserver
 python manage.py startapp avsapp
 ```
 
+### create superuser
+```
+python manage.py createsuperuser
+```
+username = admin
+password = 123456
+
+### create client
+username = client
+password = P@$$w0rd123
+
+### create staff
+username = staff
+password = P@$$w0rd123
+
+### create 3 consultant
+username = consultant1
+password = P@$$w0rd123
+
+username = consultant2
+password = P@$$w0rd123
+
+username = consultant3
+password = P@$$w0rd123
+
+username = consultant4
+password = P@$$w0rd123
+
+username = consultant5
+password = P@$$w0rd123
+
+username = consultant6
+password = P@$$w0rd123
 
