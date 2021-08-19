@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Create a client account{% endblock %}
+
+{% block style %}
+    <!-- Custom styles for this template -->
+{% endblock %}
+
+{% block content %}
+  <!-- register form -->
+  <div class="ask-inputs">
+    <div class="card-body mx-auto" style="max-width: 400px;">
+      <h2>Create a client account</h2>
+      <p class="lead">Please, sign up using the following form:</p>
+      <form action="." method="post">
+        <div class="row justify-content-center mb-3">
+          {{ u_form.as_ul }}
+          {{ p_form.as_ul }}
+        </div>
+          {% csrf_token %}
+        <div class="col text-center mb-3">
+          <button class="btn btn-primary justify-content-center" type="submit">Sign up</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

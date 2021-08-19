@@ -55,6 +55,10 @@ password = P@$$w0rd123
 username = staff
 password = P@$$w0rd123
 
+### create staff
+username = staff1
+password = P@$$w0rd123
+
 ### create 3 consultant
 username = consultant1
 password = P@$$w0rd123
@@ -74,3 +78,16 @@ password = P@$$w0rd123
 username = consultant6
 password = P@$$w0rd123
 
+
+
+### Install geos library
+#### linux
+```
+sudo apt-get install gdal-bin
+```
+#### mac
+```
+brew install gdal
+```
+email authentication
+https://medium.com/@frfahim/django-registration-with-confirmation-email-bb5da011e4ef

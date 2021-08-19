@@ -1,22 +1,54 @@
-{% extends "./layout.html" %}
+{% extends "layout.html" %}
 {% load static %}
 
 {% block title %}AVS Sustainability{% endblock %}
 
-{% block content %}
+{% block style %}
+    <!-- Custom styles for this template -->
+{% endblock %}
 
-  <main class="px-3">
-    <h1>Sustainability Consultancy</h1>
-    <p class="lead">Text area to prompt the client consult sustainability...Text area to prompt the client consult sustainability...Text area to prompt the client consult sustainability...</p>
-    <p class="lead">
-      <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Client Entrance</a>
-    </p>
-    <p class="lead">
-      <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Consultant Entrance</a>
-    </p>
-    <p class="lead">
-      <a href="#" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Staff Entrance</a>
-    </p>
-  </main>
+{% block content %}
+    <!-- ===============  Main banner area start =============== -->
+    <div class="main-banner">
+      <div class="banner-slider owl-carousel">
+          <div class="slider-item slider-item-1">
+              <div class="container">
+                  <div class="slider-content wow fadeInLeft animated" data-wow-delay="300ms" data-wow-duration="1500ms">
+                      <h2>Successfully Achieving Sustainability Together</h2>
+                      <h5> </h5>
+                          <div class="row">
+                              <!-- panel-footer -->
+                              <div class="col-6 text-left">
+                                  <div class="previous">
+                                    <a href="{% url 'register_client' %}" class="btn-common">I'M LOOKING FOR A CONSULTANT</a>
+                                  </div>
+                              </div>
+                              <div class="col-6 text-right">
+                                  <div class="next">
+                                    <a href="{% url 'register_consultant' %}" class="btn-common">I'M A CONSULTANT</a>
+                                  </div>
+                              </div>
+                          </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+    <!-- ===============  Main banner area end =============== -->
+
+  <!-- ===============  Package  area start =============== -->
+  <div class="package-area pt-120">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                  <div class="section-head pb-45">
+                      <h2>We help you Conveniently source an Affordable, Bespoke and Quality service provided by sustainability consultants of Your Choice......</h2>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+   <!-- ===============  Package  area end =============== -->
+
 
 {% endblock %}

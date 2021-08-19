@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Log-in{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+  <div class="ask-inputs">
+    <div class="card-body mx-auto" style="max-width: 400px;">
+      <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+      <form action="." method="post">
+        <div class="row justify-content-center mb-3">
+          {{ form.as_p }}
+        </div>
+          {% csrf_token %}
+        <div class="col text-center mb-3">
+          <button class="btn btn-primary justify-content-center" type="submit">Sign in</button>
+        </div>
+      </form>
+      <p class="mt-5 mb-3 text-muted">Forgetten your passwork? Click <a href="{% url 'password_reset'%}" >here</a> to reset your password.</p>
+    </div>
+  </div>
+{% endblock %}
