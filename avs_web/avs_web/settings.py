@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'phonenumber_field',
     'location_field.apps.DefaultConfig',
+    'multiselectfield',
+    'formtools',
+    'floppyforms',
     'avsapp',
 ]
 
@@ -131,6 +134,14 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
+LOGIN_URL = '/login/'
+
+LOCATION_FIELD = {
+    'provider.google.api': '//maps.google.com/maps/api/js?sensor=false',
+    'provider.google.api_key': 'AIzaSyA8vK3Oxc_6oCgus0W1gvRZ4C4yXochaQI',
+    'provider.google.api_libraries': '',
+    'provider.google.map.type': 'ROADMAP',
+}
 
 
 

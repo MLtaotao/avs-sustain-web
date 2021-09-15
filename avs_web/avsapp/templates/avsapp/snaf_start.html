@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Create a staff account{% endblock %}
+
+{% block style %}
+    {{ wizard.form.media }}
+{% endblock %}
+
+{% block content %}
+<!-- Sustainability Needs Assessment Form -->
+<div class="package-area pt-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="section-head">
+                    <h2>Sustainability Needs Assessment Form</h2>
+                    <hr>
+                    <p>
+                        Welcome to our Sustainability Needs Assessment tool. It’s great that you’re taking steps towards understanding what changes can help you improve your company’s sustainability performance.
+                    </p>
+                    <br>
+                    <p>
+                        Business sustainability is about managing environmental, social, and governance issues to achieve responsible, ethical and financially successful companies. It’s not sufficient anymore simply to not increase negative impacts, now businesses are expected to create a positive value. Thus, sustainable businesses are mindful of their responsibilities towards protecting the environment and making a positive contribution towards a better and fairer society.
+                    </p>
+                    <br>
+                    <p>  
+                        Please complete all the following questions accurately and fully as this will help increase the quality of the report. The data you supply will be treated confidentially according to our Privacy Policy.        
+                    </p>
+                    <br>
+                    <a href="{% url 'snaf' %}" class="btn-common">Start Assessment</a>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

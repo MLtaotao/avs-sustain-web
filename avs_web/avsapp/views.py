@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -8,10 +8,11 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from .forms import *
-from .models import Client, Staff, Consultant
+from .models import Client, Staff, Consultant, SustainabilityNeedsAssessmentForm, 
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from formtools.wizard.views import SessionWizardView
 
 # Create your views here.
 def index(request):
@@ -32,11 +33,11 @@ def user_login(request):
                     #check whether the user is client or consultant or staff
                     #need to define redirected to right view
                     if hasattr(request.user, 'staff'):
-                        return render(request, 'avsapp/index.html')
+                        return HttpResponseRedirect('/admin/')
                     elif hasattr(request.user, 'client'):
                         return render(request, 'avsapp/index.html')
                     elif hasattr(request.user, 'consultant'):
-                        return render(request, 'avsapp/index.html')
+                        return HttpResponseRedirect('/edit/consultant/')
                     else:
                         return HttpResponse('Authenticated user '\
                                             'successfully')
@@ -123,8 +124,6 @@ def register_client(request):
         'p_form' : p_form
     })
 
-
-
 @transaction.atomic
 def register_consultant(request):
     if request.method == "POST":
@@ -183,8 +182,7 @@ def activate(request, uidb64, token):
     else:
         return HttpResponse('Activation link is invalid!')
 
-
-@login_required
+@user_passes_test(lambda user: hasattr(user, 'client'))
 def edit_client(request):
     if request.method == "POST":
         u_form = UserEditForm(instance= request.user,
@@ -204,7 +202,7 @@ def edit_client(request):
         'p_form': p_form
     })
 
-@login_required
+@user_passes_test(lambda user: hasattr(user, 'consultant'))
 def edit_consultant(request):
     if request.method == "POST":
         u_form = UserEditForm(instance= request.user,
@@ -223,3 +221,55 @@ def edit_consultant(request):
         'u_form': u_form,
         'p_form': p_form
     })
+
+class SNAFWizard(SessionWizardView):
+    template_name = 'avsapp/snaf_wizard_form.html'
+    form_list = [SNAF1, SNAF2, SNAF3, SNAF4, SNAF5]
+
+    def done(self, form_list, **kwargs):
+        # create a snaf object to store all the values
+        snaf = SustainabilityNeedsAssessmentForm()
+
+        # set the user as the request user
+        snaf.create_by = Client.objects.get(user= self.request.user)
+        snaf.save()
+        
+        # save all the forms data to snaf
+        for form in form_list:
+            for key, value in form.cleaned_data.items():
+                 setattr(snaf, key, value)
+            snaf.save()
+
+        return render(self.request, 'avsapp/snaf_done.html')
+
+protected_snaf_view = user_passes_test(lambda user: hasattr(user, 'client'))(SNAFWizard.as_view())
+
+@user_passes_test(lambda user: hasattr(user, 'client'))
+def snaf_start(request):
+    return render(request, 'avsapp/snaf_start.html')
+
+class ECSFWizard(SessionWizardView):
+    template_name = 'avsapp/ecsf_wizard_form.html'
+    form_list = [ECSF1, ECSF2, ECSF3]
+
+    def get_form_instance(self, step):
+        return self.instance_dict.get(step, self.request.user.client)
+
+    def done(self, form_list, **kwargs):
+        # create a snaf object to store all the values
+        snaf = SustainabilityNeedsAssessmentForm()
+
+        # set the user as the request user
+        snaf.create_by = Client.objects.get(user= self.request.user)
+        snaf.save()
+        
+        # save all the forms data to snaf
+        for form in form_list:
+            for key, value in form.cleaned_data.items():
+                 setattr(snaf, key, value)
+            snaf.save()
+
+        return render(self.request, 'avsapp/ecsf_done.html')
+
+
+protected_ecsf_view = user_passes_test(lambda user: hasattr(user, 'client'))(ECSFWizard.as_view())

@@ -39,6 +39,17 @@ class ConsultantAdmin(admin.ModelAdmin):
         else:
             return None
 
+class SustainabilityNeedsAssessmentFormAdmin(admin.ModelAdmin):
+    list_display = ("id", "client_name", "create_time")
+
+    def client_name(self, obj):
+        if obj.create_by.user.get_full_name():
+            return obj.create_by.user.get_full_name()
+        else:
+            return None
+
 admin.site.register(Staff, StaffAdmin)
 admin.site.register(Client, ClientAdmin)
 admin.site.register(Consultant, ConsultantAdmin)
+admin.site.register(SustainabilityNeedsAssessmentForm, SustainabilityNeedsAssessmentFormAdmin)
+

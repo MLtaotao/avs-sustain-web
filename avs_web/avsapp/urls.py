@@ -1,10 +1,20 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
+
 from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+
+    #SNAF URL
+    path('client/snaf/', views.protected_snaf_view, name='snaf'),
+    path('client/snaf_start', views.snaf_start, name='snaf_start'),
+
+    #ECSF URL
+    path('client/exsf/', views.protected_ecsf_view, name= 'ecsf'),
+
+    #authentication url
     path('login/', views.user_login, name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name = 'avsapp/logged_out.html'),
          name ='logout'),
@@ -30,8 +40,10 @@ urlpatterns = [
      # client and staff email authentication
      path('activate/<uidb64>/<token>/', views.activate, name='activate'),
 
-     # edit client, consultant profile
+     # view edit client, consultant profile
      path('edit/client/', views.edit_client, name='edit_client'),
+
+     # path('view/consultant/', views.view_consultant, name='view_consultant'),     
      path('edit/consultant/', views.edit_consultant, name='edit_consultant'),
 
     

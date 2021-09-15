@@ -33,7 +33,7 @@
   </head>
   <body>
     <!-- Start Preloader Area -->
-    <div class="preloader">
+    <!-- <div class="preloader">
         <div class="preloader-wrap">
             <div class="preloader-logo">
                 <img src="{% static 'picture/logo.png' %}" alt="" class="img-fluid">
@@ -42,7 +42,7 @@
                <img src="{% static 'picture/Plane.png' %}"" alt="" class="animi-plane">
            </div>
         </div>
-    </div>
+    </div> -->
     <!-- End Preloader Area -->
 
     <!-- ===============  header area start =============== -->
@@ -65,10 +65,6 @@
                                         <li class="account-el">
                                             <i class='bx bxs-user-account'></i>
                                             {{ user.username }}
-                                        </li>
-                                        <li class="account-el">
-                                            <i class='bx bxs-user-account'></i>
-                                            <a href="{% url 'password_change' %}">Change password</a>
                                         </li>
                                         {% if user.client %}
                                             <li class="account-el">
@@ -128,8 +124,9 @@
                                     <a href="javascript:void(0)">Services</a>
                                     <i class="fl flaticon-plus">+</i>
                                     <ul class="sub-menu">
+                                        <li><a href="{% url 'snaf_start' %}" class="sub-item">Sustainability Needs Assessment</a></li>
                                         <li><a href="#" class="sub-item">Sustainability Needs Audit</a></li>
-                                        <li><a href="#" class="sub-item">Sustainability Consultancy</a></li>
+                                        <li><a href="{% url 'ecsf' %}" class="sub-item">Sustainability Consultancy</a></li>
                                         <li><a href="#" class="sub-item">Offsets</a></li>
                                         <li><a href="#" class="sub-item">Probono</a></li>
                                     </ul>
