@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Invitation details{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<div class="package-area pt-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="section-head">
+                    <h2>Invitation details</h2>
+                    <br>
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <form action="{% url 'consultant_invitation_details' invitation_id %}" method="post">
+                        <div class="row justify-content-center mb-3">
+                          {{ bid_form.as_p }}
+                          {% csrf_token %}
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <button type="submit" value="Accept" name="submit1" class="btn btn-outline-secondary btn-sm">
+                                        ✅ Accept</button>
+                                </div>
+                                <div class="col-sm">
+                                    <button type="submit" value="Unavailable" name="submit2" class="btn btn-outline-secondary btn-sm">
+                                        ❌ Unavailable</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    {{ ecsf_form.as_p }}
+                    {{ ecsf_form.media }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

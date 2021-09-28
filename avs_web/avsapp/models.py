@@ -4,7 +4,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from location_field.models.plain import PlainLocationField
 from django.utils import timezone
 from multiselectfield import MultiSelectField
-
+import uuid
 
 # Create your models here.
 
@@ -102,7 +102,7 @@ class Consultant(models.Model):
     company_role = models.CharField(verbose_name= 'What is your role in the company?', max_length= 200)
 
     #9. Your relevant educational qualifications *
-    edu_cert = models.TextField(verbose_name= 'What is your role in the company?')
+    edu_cert = models.TextField(verbose_name= 'Your relevant educational qualifications')
 
     #10. Membership of professional bodies *
     prof_member = models.TextField(verbose_name= 'Membership of professional bodies')
@@ -205,34 +205,34 @@ class SustainabilityNeedsAssessmentForm(models.Model):
         max_length= 1, choices= SERVICE_TYPE_CHOICE)
 
     #1.7. What industry does the company work in? ("choose all appropriate answers")
-    INDUSTRY_FILED_CHOICE = [
-        ('1', 'Aerospace & Aviation'),
-        ('2', 'Agriculture & Forestry'),
-        ('3', 'Automotive'),
-        ('4', 'Biotechnology'),
-        ('5', 'Building & Construction'),
-        ('6', 'Chemicals & Petrochemicals'),
-        ('7', 'Communications, IT & Technology'),
-        ('8', 'Education, Research & Training'),
-        ('9', 'Energy including Renewables'),
-        ('A', 'Engineering'),
-        ('B', 'Food & Drink (Retail)'),
-        ('C', 'Food & Drink (Manufacturing)'),
-        ('D', 'Other Manufacturing'),
-        ('E', 'Marine'),
-        ('F', 'Media & Marketing'),
-        ('G', 'Medical, Pharmaceutical & Health Services'),
-        ('H', 'Mining & Quarrying'),
-        ('I', 'Oil & Gas'),
-        ('J', 'Real Estate & Property Management'),
-        ('K', 'Retail (excluding Food & Drink retail)'),
-        ('L', 'Sport & Leisure'),
-        ('M', 'Tourism & Hospitality (excluding Food & Drink)'),
-        ('N', 'Transportation & Highways'),
-        ('O', 'Other')
-    ]
-    industry_type = MultiSelectField(verbose_name = '1.7. What industry does the company work in? (choose all appropriate answers)',
-        choices= INDUSTRY_FILED_CHOICE) 
+    # INDUSTRY_FILED_CHOICE = [
+    #     ('1', 'Aerospace & Aviation'),
+    #     ('2', 'Agriculture & Forestry'),
+    #     ('3', 'Automotive'),
+    #     ('4', 'Biotechnology'),
+    #     ('5', 'Building & Construction'),
+    #     ('6', 'Chemicals & Petrochemicals'),
+    #     ('7', 'Communications, IT & Technology'),
+    #     ('8', 'Education, Research & Training'),
+    #     ('9', 'Energy including Renewables'),
+    #     ('A', 'Engineering'),
+    #     ('B', 'Food & Drink (Retail)'),
+    #     ('C', 'Food & Drink (Manufacturing)'),
+    #     ('D', 'Other Manufacturing'),
+    #     ('E', 'Marine'),
+    #     ('F', 'Media & Marketing'),
+    #     ('G', 'Medical, Pharmaceutical & Health Services'),
+    #     ('H', 'Mining & Quarrying'),
+    #     ('I', 'Oil & Gas'),
+    #     ('J', 'Real Estate & Property Management'),
+    #     ('K', 'Retail (excluding Food & Drink retail)'),
+    #     ('L', 'Sport & Leisure'),
+    #     ('M', 'Tourism & Hospitality (excluding Food & Drink)'),
+    #     ('N', 'Transportation & Highways'),
+    #     ('O', 'Other')
+    # ]
+    industry_type = models.CharField(verbose_name = '1.7. What industry does the company work in? (choose all appropriate answers)',
+        max_length= 200)
 
     ###2. GENERAL  SUSTAINABILITY INFORMATION
    
@@ -490,11 +490,12 @@ class SustainabilityNeedsAssessmentForm(models.Model):
     ]
     sus_comp_freq = models.CharField(verbose_name= '5.6. How many times in the last 5 years has the company entered a competition on best sustainability or ESG practices and initiatives?',
         max_length= 1, choices= SUS_COMP_FREQ_CHOICE)
+    
 
 class ClientServiceEnquiryForm(models.Model):
     create_by = models.ForeignKey(Client, on_delete= models.CASCADE)
     create_time = models.DateTimeField(auto_now_add= True)
-    
+
     ###II. PROJECT DETAILS
 
     #1. What are your objectives for the project?* 
@@ -509,8 +510,12 @@ class ClientServiceEnquiryForm(models.Model):
         max_length= 200)
 
     #4. Please specify project dates (even if approximately)*
-    proj_start_date = models.DateField(verbose_name= 'Start date', help_text= 'Please specify project dates (even if approximately)')
-    proj_end_date = models.DateField(verbose_name= 'End date', help_text= 'Please specify project dates (even if approximately)')
+    proj_start_date = models.DateField(verbose_name= 'Start date', 
+        help_text= 'Please specify project dates (even if approximately)',
+        null=True)
+    proj_end_date = models.DateField(verbose_name= 'End date',
+        help_text= 'Please specify project dates (even if approximately)',
+        null=True)
 
     #5. Are the start and end dates flexible?*
     PROJ_FLEX_CHOICE = [
@@ -541,11 +546,11 @@ class ClientServiceEnquiryForm(models.Model):
 
     ###Please prioritise consultant characteristics so that we can find the best suitable consultant for you. Rate the following characteristics according to your priorities on a scale of 1-5 where 1-extremely important and 5 - least important.
     PRIORITY_CHOICES = [
-        ('1', '1-Extremely Important'),
-        ('2', '2-Fairly important'),
-        ('3', '3-Important'),
-        ('4', '4-Slightly Important'),
-        ('5', '5-Least important')
+        (1, '1-Extremely Important'),
+        (2, '2-Fairly important'),
+        (3, '3-Important'),
+        (4, '4-Slightly Important'),
+        (5, '5-Least important')
     ]
 
     #Consultant experience
@@ -564,4 +569,41 @@ class ClientServiceEnquiryForm(models.Model):
     priority_consult_rating = models.CharField(verbose_name= 'Consultant Satisfaction Rating/feedback from previous clients',
         max_length= 1, choices= PRIORITY_CHOICES)
 
+    def __str__(self):
+        return f'ecsf {self.id} from {self.create_by.user.username}'
 
+class ServiceInvitation(models.Model):
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4(), editable=False)
+
+    invitation_event = models.ForeignKey(ClientServiceEnquiryForm, on_delete= models.CASCADE, null= True)
+
+    invitaiton_to = models.ForeignKey(Consultant, on_delete= models.CASCADE)
+
+    create_time = models.DateTimeField(auto_now_add= True)
+
+    INVITATION_STATUS_CHOICE = [
+        ('0', 'None'),
+        ('1', 'Accept'),
+        ('2', 'Waiting'),
+        ('3', 'Backup'),
+        ('4', 'Refuse')
+    ]
+    invitation_status = models.CharField(verbose_name= 'Consultant Invitation Status',
+        max_length= 1, choices= INVITATION_STATUS_CHOICE, default= '0')
+
+    PAYMENT_STATUS_CHOICE = [
+        ('0', 'Waiting'),
+        ('1', 'Accept'),
+        ('2', 'Refuse'),
+        ('3', 'Payed')
+    ]
+    payment_status = models.CharField(verbose_name= 'Client Payment Status',
+        max_length= 1, choices= PAYMENT_STATUS_CHOICE, default= '0')
+
+    update_time = models.DateTimeField(auto_now= True)
+
+    #if accept the invitaiton, then the consultant would give a bid price for the service
+    bid_price = models.IntegerField(verbose_name= 'Bid Price(£):', null= True, blank= True)
+
+    def __str__(self):
+        return f'{self.invitation_event}'

@@ -1,12 +1,13 @@
 from django import forms
 import floppyforms
+from django.contrib.admin.widgets import AdminDateWidget
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from location_field.forms.plain import PlainLocationField
 
-from .models import Staff, Client, Consultant, SustainabilityNeedsAssessmentForm, ClientServiceEnquiryForm
+from .models import Staff, Client, Consultant, SustainabilityNeedsAssessmentForm, ClientServiceEnquiryForm, ServiceInvitation
 
 
 class LoginForm(forms.Form):
@@ -126,7 +127,7 @@ class ConsultantEditForm(forms.ModelForm):
             'specialisation': forms.Textarea(attrs={'rows':5}),
             'prof_biography': forms.Textarea(attrs={'rows':5}),
             'rating': forms.NumberInput(attrs={'readonly':True}),            
-            'vetted': forms.CheckboxInput(attrs={'disabled':'readonly'}),
+            'vetted': forms.CheckboxInput(attrs={'disabled':True}),
         }
 
 #Sustainability Needs Assessment Form(SNAF) 1-5
@@ -274,9 +275,12 @@ class ECSF1(forms.ModelForm):
         }
 
 #II. PROJECT DETAILS
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
 class ECSF2(forms.ModelForm):
-    proj_start_date = forms.DateField(widget = forms.SelectDateWidget)
-    proj_end_date = forms.DateField(widget = forms.SelectDateWidget)
+    proj_start_date = forms.DateField(widget= DateInput)
+    proj_end_date = forms.DateField(widget= DateInput)
 
     class Meta:
         SUS_SERVICE_CHOICE = [
@@ -315,3 +319,54 @@ class ECSF3(forms.ModelForm):
             'consult_location': floppyforms.widgets.Input(datalist= CONSULTANT_LOCATION_CHOICE),
         }
 
+class Consultant_ECSF(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(Consultant_ECSF, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['disabled'] = True
+
+    class Meta:
+        model = ClientServiceEnquiryForm
+        fields = ['proj_obj', 'proj_area', 'proj_spec_service', 'proj_start_date', 'proj_end_date',
+                'proj_flex', 'proj_details','consult_location', 'allow_grad_consult', 'priority_consult_exp',
+                'priority_consult_loc','priority_consult_cost', 'priority_project_date', 'priority_consult_rating']
+
+class InvitationBidForm(forms.ModelForm):
+    bid_price = forms.IntegerField(required= False)
+    class Meta:
+        model = ServiceInvitation
+        fields = ['bid_price']
+
+class CilentViewConsultantForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(CilentViewConsultantForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['disabled'] = True
+
+    class Meta:
+        model = Consultant
+        fields = ['company_role', 'edu_cert', 'prof_member', 'sus_work_exp', 
+            'sus_pre_work', 'sus_pre_work_details', 'specialisation', 'prof_biography',
+            'rating', 'vetted']
+
+class InvitationPaymentForm(forms.ModelForm):
+    
+    def __init__(self, *args, **kwargs):
+        super(InvitationPaymentForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['disabled'] = True
+    class Meta:
+        model = ServiceInvitation
+        fields = ['bid_price']
+
+# class SNAF_Check_Form(forms.ModelForm):
+#     def __init__(self, *args, **kwargs):
+#         super(SNAF_Check_Form, self).__init__(*args, **kwargs)
+#         for field in self.fields:
+#             self.fields[field].widget.attrs['disabled'] = True
+
+#     class Meta:
+#         model = SustainabilityNeedsAssessmentForm
+#         fields = []

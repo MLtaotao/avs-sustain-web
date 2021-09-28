@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}My invitations{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<div class="package-area pt-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="section-head">
+                    <h2>My invitations</h2>
+                    <br>
+                        <div class="container">
+                        {% if not invitation_form %}
+                            <p>There is no invitations.</p>
+                        {% else %}
+                        <div class="row">
+                            <div class="col align-self-center">
+                                Event
+                            </div>
+                            <div class="col align-self-center">
+                                Status (Client)
+                            </div>
+                            <div class="col align-self-center">
+                                Last Update
+                            </div>
+                            <div class="col align-self-center">
+                                Actions
+                            </div>
+                        </div>
+                        <hr>
+                    
+                        {% for invitation in invitation_form %}
+                        <div class="row">
+                            <div class="col align-self-center">
+                                {{ invitation }}
+                            </div>
+                            <div class="col align-self-center">
+                                {{ invitation.get_payment_status_display }}
+                            </div>
+                            <div class="col align-self-center">
+                                {{ invitation.update_time }}
+                            </div>
+                            <div class="col align-self-center">
+                                <a href="{% url 'consultant_invitation_details' invitation.id %}" class="btn-common-sm">View details</a>
+                            </div>
+                        </div>
+                        <br>
+                        {% endfor %}
+                        {% endif %}
+                        </div>
+                        
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

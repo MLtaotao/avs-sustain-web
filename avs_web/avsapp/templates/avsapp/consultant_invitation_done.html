@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Invitation Accepted{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block content %}
+<div class="package-area pt-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="section-head">
+                    <h2>Invitation Accepted</h2>
+                    <hr>
+                    <p>Thank you for accepting the invitaiton, we will inform you whether the client accept your bid price as soon as possible.</p>
+                    <br>
+                    <div class="container">
+                        <p>
+                            Click <a href="{% url 'consultant_invitations'%}" >here</a> to check the result.
+                        </p>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

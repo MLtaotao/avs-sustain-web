@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.contrib.sites.shortcuts import get_current_site
@@ -6,13 +6,15 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
+from .search_consultants import search_consultants
 from django.core.mail import EmailMessage
 from .forms import *
-from .models import Client, Staff, Consultant, SustainabilityNeedsAssessmentForm, 
+from .models import *
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.contrib.auth.decorators import login_required, user_passes_test
 from formtools.wizard.views import SessionWizardView
+from django.contrib import messages
 
 # Create your views here.
 def index(request):
@@ -27,6 +29,7 @@ def user_login(request):
             user = authenticate(request,
                                 username = cd['username'],
                                 password = cd['password'])
+            messages.success(request, 'form details updated.')
             if user is not None:
                 if user.is_active:
                     login(request, user)
@@ -37,7 +40,7 @@ def user_login(request):
                     elif hasattr(request.user, 'client'):
                         return render(request, 'avsapp/index.html')
                     elif hasattr(request.user, 'consultant'):
-                        return HttpResponseRedirect('/edit/consultant/')
+                        return render(request, 'avsapp/index.html')
                     else:
                         return HttpResponse('Authenticated user '\
                                             'successfully')
@@ -213,6 +216,8 @@ def edit_consultant(request):
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
+            request.user.consultant.vetted = False
+            request.user.consultant.save()
     else:
         u_form = UserEditForm(instance= request.user)
         p_form = ConsultantEditForm(instance= request.user.consultant)
@@ -237,7 +242,7 @@ class SNAFWizard(SessionWizardView):
         # save all the forms data to snaf
         for form in form_list:
             for key, value in form.cleaned_data.items():
-                 setattr(snaf, key, value)
+                setattr(snaf, key, value)
             snaf.save()
 
         return render(self.request, 'avsapp/snaf_done.html')
@@ -257,19 +262,124 @@ class ECSFWizard(SessionWizardView):
 
     def done(self, form_list, **kwargs):
         # create a snaf object to store all the values
-        snaf = SustainabilityNeedsAssessmentForm()
+        clt = Client.objects.get(user= self.request.user)
 
-        # set the user as the request user
-        snaf.create_by = Client.objects.get(user= self.request.user)
-        snaf.save()
+        ecsf = ClientServiceEnquiryForm.objects.create(create_by= self.request.user.client)
         
         # save all the forms data to snaf
         for form in form_list:
             for key, value in form.cleaned_data.items():
-                 setattr(snaf, key, value)
-            snaf.save()
+                setattr(clt, key, value)
+                setattr(ecsf, key, value)
+            clt.save()
+            ecsf.save()
+
+        consultants = search_consultants(form_list[2])
+
+        # arrange the consultant in the list:
+        n = 0
+        for consultant in consultants:
+            if n > 5:
+                break
+            else:
+                if n < 3:
+                    invitation = ServiceInvitation.objects.create(
+                        invitation_event= ecsf, 
+                        invitaiton_to= consultant,
+                        invitation_status= '2'
+
+                    )
+                    invitation.save()
+                else:
+                    invitation = ServiceInvitation.objects.create(
+                        invitation_event= ecsf, 
+                        invitaiton_to= consultant,
+                        invitation_status= '3'
+
+                    )
+                    invitation.save()
+            n+=1
 
         return render(self.request, 'avsapp/ecsf_done.html')
 
 
 protected_ecsf_view = user_passes_test(lambda user: hasattr(user, 'client'))(ECSFWizard.as_view())
+
+@user_passes_test(lambda user: hasattr(user, 'client'))
+def client_invitations(request):
+
+    invitation_form = ServiceInvitation.objects.exclude(invitation_status__in=['3', '4']).filter(invitation_event__create_by__user = request.user).all()
+
+    return render(request, 'avsapp/client_invitations.html', {
+        'invitation_form': invitation_form
+    })
+
+@user_passes_test(lambda user: hasattr(user, 'client'))
+def client_invitation_details(request, invitation_id):
+    invitaiton = ServiceInvitation.objects.get(uuid= invitation_id)
+
+    if request.method == 'POST':
+        if 'submit1' in request.POST:
+            invitaiton.payment_status = '1'
+            invitaiton.save()
+            return HttpResponse('Will redirect to payment system....')
+        elif 'submit2' in request.POST:
+            #We will redirect you to a new
+            pass
+
+    consultant_details = CilentViewConsultantForm(instance= invitaiton.invitaiton_to)
+    bid_price = invitaiton.bid_price
+    payment_price = round(bid_price * 0.05, 2)
+
+    return render(request, 'avsapp/client_invitation_details.html', {
+        'invitation_id': invitation_id,
+        'consultant_form': consultant_details,
+        'bid_price': bid_price,
+        'payment_price': payment_price
+    })
+
+
+@user_passes_test(lambda user: hasattr(user, 'consultant'))
+def consultant_invitations(request):
+
+    invitation_form = ServiceInvitation.objects.exclude(invitation_status__in= ['3', '4']).filter(invitaiton_to__user = request.user).all()
+
+    return render(request, 'avsapp/consultant_invitations.html', {
+        'invitation_form': invitation_form
+    })
+
+@user_passes_test(lambda user: hasattr(user, 'consultant'))
+def consultant_invitation_details(request, invitation_id):
+    
+    invitaiton = ServiceInvitation.objects.get(uuid= invitation_id)
+
+    if request.method == "POST":
+        if 'submit1' in request.POST and request.POST['bid_price']:
+            value = request.POST['bid_price']
+            invitaiton.bid_price = value
+            invitaiton.invitation_status = '1'
+            invitaiton.save()
+            return render(request, 'avsapp/consultant_invitation_done.html')
+            
+
+        elif 'submit2' in request.POST:
+            value = request.POST['submit2']
+            invitaiton.invitation_status = '4'
+            invitaiton.save()
+            new_invitation = ServiceInvitation.objects.filter(invitation_event= invitaiton.invitation_event, invitation_status= '3').first()
+            new_invitation.invitation_status = '2'
+            new_invitation.save()
+
+            return redirect('consultant_invitations')
+
+        else:
+            messages.error(request, 'Accept must be with a bid price!')
+
+    ecsf_details = Consultant_ECSF(instance= invitaiton.invitation_event)
+    bid_form = InvitationBidForm(instance= invitaiton)
+
+    return render(request, 'avsapp/consultant_invitation_details.html', {
+        'invitation_id': invitation_id,
+        'ecsf_form': ecsf_details,
+        'bid_form': bid_form
+    })

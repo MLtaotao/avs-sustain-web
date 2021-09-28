@@ -11,9 +11,11 @@
 {% block content %}
 <!-- Sustainability Needs Assessment Form -->
 <div class="ask-inputs">
-    <div class="card-body mx-auto" style="max-width: 400px;">
-      <h2>Sustainability Needs Assessment Form</h2>
-      <p class="lead">Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+  <div class="section-head">
+  <h2>Sustainability Needs Assessment Form</h2>
+  <p class="lead">Page {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+  </div>
+    <div class="card-body mx-auto" style="max-width: 800px;">
       <form action="." method="post">
         <div class="row justify-content-center mb-3">
             {{ wizard.management_form }}
