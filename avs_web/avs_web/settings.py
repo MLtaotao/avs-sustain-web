@@ -128,8 +128,8 @@ DEFAULT_FROM_EMAIL = 'webmaster@gmail.com'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'username@domain'
-EMAIL_HOST_PASSWORD = 'password'
+EMAIL_HOST_USER = 'avsconfirm@gmail.com'
+EMAIL_HOST_PASSWORD = 'AVS_2021'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
