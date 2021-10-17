@@ -13,7 +13,8 @@ class Staff(models.Model):
     business_phone = PhoneNumberField()
 
     def __str__(self):
-        return self.user.username    
+        return self.user.username
+    
 
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete= models.CASCADE, unique= True)
@@ -42,7 +43,7 @@ class Client(models.Model):
     location = PlainLocationField(based_fields=['business_address'], zoom=7)
 
     #7. Business Email *
-    business_email = models.EmailField(verbose_name='Business Email')
+    business_email = models.EmailField(verbose_name='Business Emai')
 
     #8. Business Phone Number*
     business_phone = PhoneNumberField(verbose_name = 'Business Phone Number')
@@ -489,6 +490,7 @@ class SustainabilityNeedsAssessmentForm(models.Model):
     ]
     sus_comp_freq = models.CharField(verbose_name= '5.6. How many times in the last 5 years has the company entered a competition on best sustainability or ESG practices and initiatives?',
         max_length= 1, choices= SUS_COMP_FREQ_CHOICE)
+    
 
 class ClientServiceEnquiryForm(models.Model):
     create_by = models.ForeignKey(Client, on_delete= models.CASCADE)
