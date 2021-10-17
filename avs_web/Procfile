@@ -1,1 +1,0 @@
-web: gunicorn avs_web avs_web.wsgi

@@ -130,6 +130,7 @@
                             </div>
                             <ul>
                                 <li><a href="#">Home </a></li>
+                                {% if user.client %}
                                 <li class="has-child-menu">
                                     <a href="javascript:void(0)">Services</a>
                                     <i class="fl flaticon-plus">+</i>
@@ -141,6 +142,7 @@
                                         <li><a href="#" class="sub-item">Probono</a></li>
                                     </ul>
                                 </li>
+                                {% endif %}
                                 <li><a href="#">For Consultants </a></li>
                                 <li><a href="#">For Companies </a></li>
                                 <li><a href="#">About Us </a></li>
