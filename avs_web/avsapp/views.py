@@ -179,7 +179,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        # login(request, user)
+        login(request, user)
         # return redirect('home')
         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
     else:
@@ -325,9 +325,7 @@ def client_invitation_details(request, invitation_id):
             return HttpResponse('Will redirect to payment system....')
         elif 'submit2' in request.POST:
             #We will redirect you to a new
-            invitaiton.payment_status = '2'
-            invitaiton.save()
-            return redirect(client_invitations)
+            pass
 
     consultant_details = CilentViewConsultantForm(instance= invitaiton.invitaiton_to)
     bid_price = invitaiton.bid_price
