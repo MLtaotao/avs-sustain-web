@@ -126,7 +126,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_FROM_EMAIL = 'webmaster@gmail.com'
 
-EMAIL_BACKEND = 'django.core.mail.backends.stmp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'avsconfirm@gmail.com'
 EMAIL_HOST_PASSWORD = 'AVS_2021'
