@@ -121,13 +121,11 @@ class ConsultantEditForm(forms.ModelForm):
         fields = ['linkedin_url', 'business_name', 'business_address', 'location',
             'business_email', 'business_phone', 'company_role', 'edu_cert',
             'prof_member', 'sus_work_exp', 'sus_pre_work', 'sus_pre_work_details',
-            'specialisation', 'prof_biography', 'rating', 'vetted']
+            'specialisation', 'prof_biography']
         widgets = {
             'sus_pre_work_details': forms.Textarea(attrs={'rows':5}),
             'specialisation': forms.Textarea(attrs={'rows':5}),
-            'prof_biography': forms.Textarea(attrs={'rows':5}),
-            'rating': forms.NumberInput(attrs={'readonly':True}),            
-            'vetted': forms.CheckboxInput(attrs={'disabled':True}),
+            'prof_biography': forms.Textarea(attrs={'rows':5}),            
         }
 
 #Sustainability Needs Assessment Form(SNAF) 1-5
