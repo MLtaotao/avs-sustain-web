@@ -18,8 +18,7 @@ class Staff(models.Model):
 
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete= models.CASCADE, unique= True)
-    aggrement_plociy = models.BooleanField(default= False)
-    aggrement_service = models.BooleanField(default= False)
+    aggrement_plociy = models.BooleanField(default= False, verbose_name= "Terms and Conditions")
 
     ### 1. COMPANY DETAILS
     #1.1 What is your role in the company?
@@ -79,8 +78,7 @@ class Client(models.Model):
 
 class Consultant(models.Model):
     user = models.OneToOneField(User, on_delete= models.CASCADE, unique= True)
-    aggrement_plociy = models.BooleanField(default= False)
-    aggrement_service = models.BooleanField(default= False)
+    aggrement_plociy = models.BooleanField(default= False, verbose_name= "Terms and Conditions")
 
     #3. LinkedIn Profile 
     linkedin_url = models.URLField(verbose_name='LinkedIn Profile URL', blank=True)

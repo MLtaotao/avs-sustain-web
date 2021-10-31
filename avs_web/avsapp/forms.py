@@ -6,6 +6,10 @@ from django.contrib.auth.forms import UserCreationForm
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from location_field.forms.plain import PlainLocationField
+# from django.urls import reverse
+from django.utils.functional import lazy
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 from .models import Staff, Client, Consultant, SustainabilityNeedsAssessmentForm, ClientServiceEnquiryForm, ServiceInvitation
 
@@ -51,10 +55,11 @@ class StaffForm(forms.ModelForm):
 
 #Client register form
 class ClientForm(forms.ModelForm):
-    
+    aggrement_plociy = forms.BooleanField(label = format_html('<a href="{}">{}</a>', mark_safe('https://www.avs-sustainability.com/terms-conditions'), "Terms and Conditions"))
     class Meta:
         model = Client
-        fields = ['aggrement_plociy', 'aggrement_service']
+        fields = ['aggrement_plociy']
+
         
 #Client edit form
 class ClientEditForm(forms.ModelForm):
@@ -105,10 +110,12 @@ class ClientEditForm(forms.ModelForm):
 
 #Consulutant register form
 class ConsultantForm(forms.ModelForm):
+    aggrement_plociy = forms.BooleanField(label = format_html('<a href="{}">{}</a>', mark_safe('https://www.avs-sustainability.com/terms-conditions'), "Terms and Conditions"))
+
     
     class Meta:
         model = Consultant
-        fields = ['aggrement_plociy', 'aggrement_service']
+        fields = ['aggrement_plociy']
 
 #Consultant edit form
 class ConsultantEditForm(forms.ModelForm):
