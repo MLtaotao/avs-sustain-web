@@ -128,8 +128,8 @@ DEFAULT_FROM_EMAIL = 'webmaster@gmail.com'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'avsconfirm@gmail.com'
-EMAIL_HOST_PASSWORD = 'AVS_2021'
+EMAIL_HOST_USER = 'email address'
+EMAIL_HOST_PASSWORD = 'password'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -138,7 +138,7 @@ LOGIN_URL = '/login/'
 
 LOCATION_FIELD = {
     'provider.google.api': '//maps.google.com/maps/api/js?sensor=false',
-    'provider.google.api_key': 'AIzaSyA8vK3Oxc_6oCgus0W1gvRZ4C4yXochaQI',
+    'provider.google.api_key': 'google.api_key',
     'provider.google.api_libraries': '',
     'provider.google.map.type': 'ROADMAP',
 }
